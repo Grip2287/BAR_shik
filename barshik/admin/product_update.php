@@ -1,6 +1,6 @@
 <?php
 include "../connect.php";
-$id = isset($_POST['id'])?$_POST['id']:false;
+$id = isset($_GET['id'])?$_GET['id']:false;
 
 $Name = isset($_POST['Name'])?$_POST['Name']:false;
 
@@ -10,40 +10,51 @@ $Price = isset($_POST['Price'])?$_POST['Price']:false;
 
 $Descr = isset($_POST['Desc'])?$_POST['Desc']:false;
 
-$file = isset($_FILES['file'])?$_FILES['file']:false;
+$files= $_FILES['file']['error'] == 0 ? $_FILES['file'] : false;
 
+$take = $_FILES['file']['tmp_name'];
 
-$product = mysqli_fetch_assoc(mysqli_query($con, "SELECT * from  `Product`  where Id_product = $id "));
+$name = $_FILES['file']['name'];
+ 
+
+$product = mysqli_fetch_assoc(mysqli_query($con, "SELECT * from  `Product` 
+INNER JOIN Category on Product.Category_id = Category.Category_id 
+ where `Id_product` = $id "));
 $check_update = false;
-$file_name = $file["name"];
 $query_update = " UPDATE `Product` SET ";
 if ($product["Name"] != $Name) {
-    $query_update .= " `Name` = '$name', ";
+    $query_update .= " `Name` = '$Name', ";
     $check_update = true;
 }
 if ($product["Price"] != $Price) {
     $query_update .= " Price = '$Price', ";
     $check_update = true;
 }
-if ($product["cat"] != $cat) {
-    $query_update .= " Category_id = '$cat', ";
+if ($product["Category_id"] != $Categ) {
+    $query_update .= " Category_id = $Categ , ";
     $check_update = true;
 }
 if ($product["Description"] != $Descr) {
   $query_update .= " Description = '$Descr', ";
   $check_update = true;
 }
-if ($product["Image"] != $file_name) {
-    $query_update .= " Image = '$file_name', ";
+if ($files) {
+    $query_update .= " image = '$name', ";
+    move_uploaded_file($take, '../images/'.$name);
     $check_update = true;
-  }
+}
   if ($check_update) {
     $query_update = substr($query_update, 0, -2);
     $query_update .= " WHERE Id_product = $id";
-    $result = mysqli_query($conn, $query_update);
+    var_dump($query_update);
+    $result = mysqli_query($con, $query_update);
     if ($result) {
-        echo check_error("Данные обновленны!", $id);
+        echo"<script>alert('Товар Обновлен');
+        location.href ='product.php';
+        </script>";
     }
 } else {
-    echo check_error("Данные актуальны!", $id);
+    echo"<script>alert('Товар актуален');
+    location.href ='product.php';
+    </script>";
 }

@@ -1,3 +1,9 @@
+<?php
+include "../connect.php";
+$query_cat = mysqli_query($con, "SELECT * FROM `Category` ");
+
+$cat_result = mysqli_fetch_all($query_cat);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,33 +39,27 @@ include "header_admin.php";
         <table>
             <tr>
                 <th>Название категории</th>
-                <th>Количество</th>
+                <th>Количество товаров</th>
             </tr>
+            <?php foreach ($cat_result as $item):?>
+                <?php  
+                $count_product = mysqli_fetch_array(mysqli_query($con , " SELECT COUNT(`Category_id`) FROM `Product` WHERE `Category_id` = $item[0]"));
+                ?>
             <tr>
-                <th>Margaret Nguyen</th>
-                <td>427311</td>
-                <td><button><img src="/add_1237946.png" alt=""></button></td>
-                <td><button><img src="/shape_12205851.png" alt=""></button></td>
+            <form action="cat_update.php?id=<?=$item[0]?>" method="POST" >
+                <td><input type="text" name='Name' value = "<?=$item[1]?>"></td>
+                <td><?=$count_product[0]?></td>
+                <td><input type="submit" class="btn btn-outline-success" value="Редактировать"></td>
+                </form>
+                <td><a href="cat_delete.php?id=<?=$item[0]?>"><button type="button" class="btn btn-outline-danger" >Удалить</button></a></td>
             </tr>
-            <tr>
-                <th>Edvard Galinski</th>
-                <td>533175</td>
-                <td><button><img src="/add_1237946.png" alt=""></button></td>
-                <td><button><img src="/shape_12205851.png" alt=""></button></td>
-            </tr>
-            <tr>
-                <th>Hoshi Nakamura</th>
-                <td>601942</td>
-                <td><button><img src="/add_1237946.png" alt=""></button></td>
-                <td><button><img src="/shape_12205851.png" alt=""></button></td>
-            </tr>
+            <?php endforeach;?>
         </table>
     </div>
     <div class="adding">
         <p>Добавление товара</p>
-        <form action="">
-            <input type="text" name="Name" id="" placeholder="Название">
-            <input type="text" name="Cated" id="" placeholder="Категория">
+        <form action="cat_add.php" method="POST" >
+            <input type="text" name="Name" id="" placeholder="Название категории">
             <input type="submit" value="Отправить" placeholder="Создать">
         </form>
     </div>

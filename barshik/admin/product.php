@@ -53,16 +53,17 @@ include "header_admin.php";
             
             <?php foreach ($result1 as $item):?>
             <tr>
-            <form action="product_update.php?id=<?=$item[0]?>" method="POST">
+            <form action="product_update.php?id=<?=$item[0]?>" method="POST" enctype="multipart/form-data">
                 <td><input type="text" name='Name' value = "<?=$item[1]?>"></td>
                 <td>   <select  class="form_card" name="cat" id="">
+                <option value="<?=$item[3]?>" selected><?=$item[7]?></option>  
             <?php foreach ($cat_result as $value_2) {?>  
                         <option value="<?=$value_2[0]?>"><?=$value_2[1]?></option>  
                     <?php }?>  
                 </select> </td>
-                <td><input type="text" name='Price' value = "<?=$item[4]?>"></td>
+                <td><input type="number" name='Price' value = "<?=$item[4]?>"></td>
                 <td><input type="text" name='Desc' value = "<?=$item[2]?>"></td>
-                <td><input type="text" name='image' value = "<?=$item[5]?>"></td>
+                <td> <img src="../images/<?=$item[5]?>" alt="" height = "100px" width = "100px"></td>
                 <td><input type="file" name='file'></td>
                 <td><input type="submit" class="btn btn-outline-success" value="Редактировать"></td>
                 </form>
@@ -89,7 +90,7 @@ include "header_admin.php";
                         <option value="<?=$value_2[0]?>"><?=$value_2[1]?></option>  
                     <?php }?>  
                 </select>  
-            <input type="text" name="Price" id="" placeholder="Цена">
+            <input type="number" name="Price" id="" placeholder="Цена">
             <input type="text" name="Desc" id="" placeholder="Описание">
             <input type="file" name="image" placeholder="Изображение">
 
